@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jkdownloadanime | Extractor de enlaces Mega y Mediafire por episodio</title>
+    <meta name="description"
+        content="Pegá el link de un anime de JKanime y revisá al instante qué episodios tienen enlace activo en Mega y en Mediafire, con la mejor opción recomendada por episodio.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tu-dominio.com/">
+    <meta name="theme-color" content="#4b3f82">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="jkdownloadanime | Extractor de enlaces Mega y Mediafire por episodio">
+    <meta property="og:description"
+        content="Pegá el link de un anime de JKanime y revisá al instante qué episodios tienen enlace activo en Mega y en Mediafire.">
+    <meta property="og:url" content="https://tu-dominio.com/">
+    <meta property="og:locale" content="es_ES">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="jkdownloadanime | Extractor de enlaces Mega y Mediafire por episodio">
+    <meta name="twitter:description"
+        content="Pegá el link de un anime de JKanime y revisá al instante qué episodios tienen enlace activo en Mega y en Mediafire.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Trebuchet+MS&family=PT+Sans:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --page-bg: #E7E3D8;
+            --container-bg: #FDFCF9;
+            --header-a: #7a68c4;
+            --header-b: #4b3f82;
+            --text: #3a362e;
+            --text-dim: #8a8478;
+            --border: #ddd6c4;
+            --accent: #6f5fb0;
+            --accent-deep: #4b3f82;
+            --accent-light: #a294dd;
+            --mega: #e0524a;
+            --mega-deep: #b8342c;
+            --mega-light: #ea847d;
+            --mf: #4a67e0;
+            --mf-deep: #2f4bb8;
+            --mf-light: #7d94ee;
+            --green: #2fa66a;
+            --green-deep: #1f7a4c;
+            --green-light: #63c996;
+            --danger: #c0392b;
+            --danger-bg: #fdecea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+
+        body {
+            font-family: 'PT Sans', 'Trebuchet MS', Verdana, sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--page-bg);
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.015) 0px, rgba(0, 0, 0, 0.015) 1px, transparent 1px, transparent 3px);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 28px 14px 60px;
+        }
+
+        .page {
+            max-width: 760px;
+            width: 100%;
+        }
+
+        /* ---------- banner tipo cabecera de blog ---------- */
+        .blog-header {
+            background: linear-gradient(160deg, var(--header-a), var(--header-b));
+            border-radius: 8px 8px 0 0;
+            border: 1px solid var(--accent-deep);
+            border-bottom: none;
+            padding: 22px 26px 20px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        .blog-header h1 {
+            color: #fff;
+            font-size: 26px;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .blog-header .tagline {
+            color: #d9d3f2;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .blog-header .tagline b {
+            color: #fff;
+        }
+
+        .meta-strip {
+            background: #3d3468;
+            color: #c7c0e8;
+            font-size: 12.5px;
+            padding: 6px 26px;
+            border-left: 1px solid var(--accent-deep);
+            border-right: 1px solid var(--accent-deep);
+        }
+
+        /* ---------- cuerpo principal, caja "post" blanca ---------- */
+        .content {
+            background: var(--container-bg);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            padding: 22px 26px 28px;
+        }
+
+        /* ---------- widget: buscar anime ---------- */
+        .search-widget {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .search-widget label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #c9c2ae;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 15px;
+            background: #fdfdfb;
+            color: var(--text);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+        }
+
+        input:focus-visible {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        button {
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+            background: linear-gradient(to bottom, var(--accent-light), var(--accent));
+            border: 1px solid var(--accent-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(0, 0, 0, 0.15);
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+            transition: filter 0.12s;
+        }
+
+        button:hover:not(:disabled) {
+            filter: brightness(1.06);
+        }
+
+        button:active:not(:disabled) {
+            filter: brightness(0.94);
+        }
+
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--accent-deep);
+            outline-offset: 2px;
+        }
+
+        .error {
+            display: none;
+            margin-bottom: 18px;
+            padding: 10px 14px;
+            background: var(--danger-bg);
+            border: 1px solid #eab6ae;
+            border-left: 4px solid var(--danger);
+            color: #7a251c;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .error strong {
+            color: var(--danger);
+        }
+
+        /* ---------- loader inicial ---------- */
+        .initial-loader {
+            text-align: center;
+            padding: 50px 20px;
+            display: none;
+        }
+
+        .initial-loader.active {
+            display: block;
+        }
+
+        .initial-loader .spinner-big {
+            border: 3px solid #eee9dc;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .initial-loader p {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        /* ---------- panel de resultados ---------- */
+        .results-panel {
+            display: none;
+        }
+
+        .results-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ---------- badge de estado dentro de cada sección ---------- */
+        .section-status {
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 10px;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.25);
+            color: #fff;
+        }
+
+        .section-row {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .media-box {
+            flex: 0 0 170px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6px 4px;
+            color: var(--text-dim);
+        }
+
+        .media-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .media-placeholder .arrow {
+            font-size: 26px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .media-placeholder p {
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+
+        .media-placeholder small {
+            color: #aaa397;
+        }
+
+        /* ---------- secciones tipo "post" por servidor ---------- */
+        .download-section {
+            flex: 0 1 480px;
+            min-width: 0;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            color: #fff;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+            flex-wrap: wrap;
+        }
+
+        .section-header .title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            margin-right: auto;
+        }
+
+        .section-header .count {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .mega-section .section-header {
+            background: linear-gradient(to bottom, var(--mega-light), var(--mega-deep));
+        }
+
+        .mediafire-section .section-header {
+            background: linear-gradient(to bottom, var(--mf-light), var(--mf-deep));
+        }
+
+        .mixed-section .section-header {
+            background: linear-gradient(to bottom, var(--green-light), var(--green-deep));
+        }
+
+        .section-hint {
+            font-size: 12px;
+            color: var(--text-dim);
+            padding: 6px 16px 0;
+            font-style: italic;
+        }
+
+        .section-body {
+            padding: 14px 16px;
+        }
+
+        .col .ep-list,
+        .section-body .ep-list {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .ep-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ep-list::-webkit-scrollbar-thumb {
+            background: #cfc7b0;
+            border-radius: 4px;
+        }
+
+        .ep-list::-webkit-scrollbar-track {
+            background: #f7f5ee;
+        }
+
+        .ep-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ep-item:last-child {
+            border-bottom: none;
+        }
+
+        .ep-item:nth-child(odd) {
+            background: #fbfaf6;
+        }
+
+        .ep-item.flash {
+            animation: flashRow 0.9s ease-out;
+        }
+
+        @keyframes flashRow {
+            0% {
+                background: #eee6fb;
+            }
+
+            100% {
+                background: transparent;
+            }
+        }
+
+        .ep-item .ep-num {
+            font-weight: 700;
+            color: var(--text-dim);
+            min-width: 32px;
+        }
+
+        .ep-item .ep-status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ep-item .ep-status .link {
+            color: var(--accent-deep);
+            text-decoration: none;
+            font-size: 13px;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ep-item .ep-status .link:hover {
+            text-decoration: underline;
+        }
+
+        .ep-item .ep-status .size {
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        .badge-status {
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .badge-status.available {
+            color: var(--green-deep);
+            font-weight: 700;
+        }
+
+        .badge-status.unavailable {
+            color: #b3ac9c;
+        }
+
+        .badge-status.checking {
+            color: var(--accent-deep);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .spinner-small {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #eee6fb;
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .section-footer {
+            padding: 10px 16px 14px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .section-footer button {
+            background: #f1eee3;
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            text-shadow: none;
+            font-size: 13px;
+            padding: 8px 14px;
+        }
+
+        .section-footer button:hover:not(:disabled) {
+            filter: none;
+            border-color: var(--accent);
+            color: var(--accent-deep);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 11px 16px;
+            border-radius: 5px;
+            font-size: 13px;
+            z-index: 1000;
+            border: 1px solid var(--border);
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.25s ease-out;
+            max-width: 380px;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--green);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--mf);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(110%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(110%);
+                opacity: 0;
+            }
+        }
+
+        /* ---------- preguntas frecuentes ---------- */
+        .faq-widget {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-top: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .faq-widget .widget-title {
+            background: #f1eee3;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .faq-widget details {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-widget details:last-child {
+            border-bottom: none;
+        }
+
+        .faq-widget summary {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 16px 18px;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--accent-deep);
+            list-style: none;
+        }
+
+        .faq-widget summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-widget summary:hover {
+            background: #f7f5ee;
+        }
+
+        .faq-widget summary .chev {
+            flex: 0 0 auto;
+            width: 11px;
+            height: 11px;
+            border-right: 2.5px solid var(--accent);
+            border-bottom: 2.5px solid var(--accent);
+            transform: rotate(45deg);
+            transition: transform 0.2s ease;
+            margin-top: -4px;
+        }
+
+        .faq-widget details[open] summary .chev {
+            transform: rotate(-135deg);
+            margin-top: 4px;
+        }
+
+        .faq-widget details p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+            padding: 0 18px 16px;
+        }
+
+        .faq-widget code {
+            background: #f1eee3;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .blog-footer {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border);
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 700px) {
+            .content {
+                padding: 18px 16px 22px;
+            }
+
+            .blog-header {
+                padding: 18px 18px 16px;
+            }
+
+            .blog-header h1 {
+                font-size: 22px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .section-header {
+                justify-content: flex-start;
+            }
+
+            .section-row {
+                flex-direction: column;
+            }
+
+            .download-section {
+                flex: 1 1 auto;
+            }
+
+            .media-box {
+                flex: none;
+                width: 100%;
+            }
+
+            .media-placeholder {
+                min-height: 60px;
+            }
+
+            .ep-item .ep-status .link {
+                max-width: 160px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+        <div class="blog-header">
+            <h1>jkdownloadanime</h1>
+            <p class="tagline">Extractor de enlaces de <b>Mega</b> y <b>Mediafire</b>, episodio por episodio</p>
+        </div>
+        <div class="meta-strip">buscá el anime y revisá qué episodios tienen enlace activo en cada servidor</div>
+
+        <div class="content">
+            <div class="search-widget">
+                <label for="urlInput">Pegá el link del anime (de JKanime)</label>
+                <div class="input-group">
+                    <input type="text" id="urlInput" placeholder="Ej: https://jkanime.net/baccano/"
+                        value="https://jkanime.net/baccano/">
+                    <button id="checkBtn">Verificar</button>
+                </div>
+            </div>
+
+            <div class="error" id="error"><strong>Error:</strong> <span id="errorMsg"></span></div>
+
+            <div class="initial-loader" id="initialLoader">
+                <div class="spinner-big"></div>
+                <p>Obteniendo información del anime...</p>
+            </div>
+
+            <div class="results-panel" id="resultsPanel">
+                <div class="section-row">
+                    <div class="media-box">
+                        <div class="media-placeholder">
+                            <span class="arrow">&rarr;</span>
+                            <p>Así se descarga con Mega<br><small>(imagen / gif próximamente)</small></p>
+                        </div>
+                    </div>
+                    <div class="download-section mega-section" id="megaCol">
+                        <div class="section-header">
+                            <span class="title">MEGA</span>
+                            <span class="count" id="megaCount">0 disponibles</span>
+                            <span class="section-status" id="megaBadge">esperando</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="ep-list" id="megaList"></div>
+                        </div>
+                        <div class="section-footer"><button id="copyMegaBtn" disabled>Copiar enlaces</button></div>
+                    </div>
+                </div>
+
+                <div class="section-row">
+                    <div class="media-box">
+                        <div class="media-placeholder">
+                            <span class="arrow">&rarr;</span>
+                            <p>Así se descarga con Mediafire<br><small>(imagen / gif próximamente)</small></p>
+                        </div>
+                    </div>
+                    <div class="download-section mediafire-section" id="mediafireCol">
+                        <div class="section-header">
+                            <span class="title">MEDIAFIRE</span>
+                            <span class="count" id="mediafireCount">0 disponibles</span>
+                            <span class="section-status" id="mediafireBadge">esperando</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="ep-list" id="mediafireList"></div>
+                        </div>
+                        <div class="section-footer"><button id="copyMediafireBtn" disabled>Copiar enlaces</button></div>
+                    </div>
+                </div>
+
+                <div class="section-row">
+                    <div class="media-box">
+                        <div class="media-placeholder">
+                            <span class="arrow">&rarr;</span>
+                            <p>El mejor enlace de cada episodio<br><small>(imagen / gif próximamente)</small></p>
+                        </div>
+                    </div>
+                    <div class="download-section mixed-section" id="mixedCol">
+                        <div class="section-header">
+                            <span class="title">RECOMENDADO</span>
+                            <span class="count" id="mixedCount">0 disponibles</span>
+                            <span class="section-status" id="mixedBadge">esperando</span>
+                        </div>
+                        <div class="section-hint">La mayor cantidad de episodios disponibles, priorizando Mediafire
+                        </div>
+                        <div class="section-body">
+                            <div class="ep-list" id="mixedList"></div>
+                        </div>
+                        <div class="section-footer">
+                            <button id="copyMixedBtn" disabled>Copiar enlaces</button>
+                            <button id="jdBtn" disabled>Exportar .txt</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-widget">
+                <div class="widget-title">Preguntas frecuentes</div>
+                <details>
+                    <summary><span>¿Qué hace esta página?</span><span class="chev"></span></summary>
+                    <p>Recibe el link de un anime en JKanime, revisa todos sus episodios y muestra qué enlaces de
+                        descarga en Mega y Mediafire están activos en este momento, uno por uno.</p>
+                </details>
+                <details>
+                    <summary><span>¿Cómo obtengo los enlaces de descarga de mi anime?</span><span class="chev"></span>
+                    </summary>
+                    <p>Pegá la URL del anime (por ejemplo <code>https://jkanime.net/nombre-del-anime/</code>) en el
+                        buscador y presioná Verificar. La revisión de cada episodio va apareciendo a medida que termina.
+                    </p>
+                </details>
+                <details>
+                    <summary><span>¿Por qué algunos episodios no tienen enlace en Mega o Mediafire?</span><span
+                            class="chev"></span></summary>
+                    <p>Depende de qué haya subido cada uploader: algunos episodios solo están disponibles en uno de los
+                        dos servidores, o el enlace original ya no existe. Por eso se revisan ambos por separado.</p>
+                </details>
+                <details>
+                    <summary><span>¿Cuál es la diferencia entre Mega y Mediafire?</span><span class="chev"></span>
+                    </summary>
+                    <p>Son dos servicios de almacenamiento distintos donde suelen subirse los episodios. No hay uno
+                        "mejor" en general: la sección Recomendado elige automáticamente el que esté disponible para
+                        cada episodio, priorizando Mega.</p>
+                </details>
+                <details>
+                    <summary><span>¿Qué significa la sección Recomendado?</span><span class="chev"></span></summary>
+                    <p>Por cada episodio, muestra el mejor enlace disponible: usa Mega si existe, y si no, Mediafire.
+                        Sirve para tener una sola lista con todos los episodios sin tener que comparar las otras dos
+                        secciones.</p>
+                </details>
+                <details>
+                    <summary><span>¿Esta página aloja los archivos?</span><span class="chev"></span></summary>
+                    <p>No. Esta herramienta no sube, guarda ni distribuye ningún archivo: solo consulta y muestra
+                        enlaces que ya existen en Mega y Mediafire.</p>
+                </details>
+            </div>
+
+            <div class="blog-footer">
+                <p>jkdownloadanime no aloja ni distribuye archivos: solo verifica enlaces ya publicados en Mega y
+                    Mediafire.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "jkdownloadanime",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "description": "Extractor de enlaces que revisa episodio por episodio qué links de Mega y Mediafire están activos para un anime de JKanime.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Qué hace esta página?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Recibe el link de un anime en JKanime, revisa todos sus episodios y muestra qué enlaces de descarga en Mega y Mediafire están activos en este momento, uno por uno."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo obtengo los enlaces de descarga de mi anime?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pegá la URL del anime en el buscador y presioná Verificar. La revisión de cada episodio va apareciendo a medida que termina."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Por qué algunos episodios no tienen enlace en Mega o Mediafire?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Depende de qué haya subido cada uploader: algunos episodios solo están disponibles en uno de los dos servidores, o el enlace original ya no existe."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es la diferencia entre Mega y Mediafire?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Son dos servicios de almacenamiento distintos donde suelen subirse los episodios. La sección Recomendado elige automáticamente el que esté disponible para cada episodio, priorizando Mega."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué significa la sección Recomendado?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Por cada episodio, muestra el mejor enlace disponible: usa Mega si existe, y si no, Mediafire."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Esta página aloja los archivos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Esta herramienta no sube, guarda ni distribuye ningún archivo: solo consulta y muestra enlaces que ya existen en Mega y Mediafire."
+      }
+    }
+  ]
+}
+</script>
+
+    <script>
+        // ============================================
+        // ESTADO
+        // ============================================
+        const urlInput = document.getElementById('urlInput');
+        const checkBtn = document.getElementById('checkBtn');
+        const error = document.getElementById('error');
+        const errorMsg = document.getElementById('errorMsg');
+        const initialLoader = document.getElementById('initialLoader');
+        const resultsPanel = document.getElementById('resultsPanel');
+        const progressFill = document.getElementById('progressFill');
+        const progressLabel = document.getElementById('progressLabel');
+
+        const megaList = document.getElementById('megaList');
+        const mediafireList = document.getElementById('mediafireList');
+        const mixedList = document.getElementById('mixedList');
+
+        const megaCount = document.getElementById('megaCount');
+        const mediafireCount = document.getElementById('mediafireCount');
+        const mixedCount = document.getElementById('mixedCount');
+
+        const megaBadge = document.getElementById('megaBadge');
+        const mediafireBadge = document.getElementById('mediafireBadge');
+        const mixedBadge = document.getElementById('mixedBadge');
+
+        const copyMegaBtn = document.getElementById('copyMegaBtn');
+        const copyMediafireBtn = document.getElementById('copyMediafireBtn');
+        const copyMixedBtn = document.getElementById('copyMixedBtn');
+        const jdBtn = document.getElementById('jdBtn');
+
+        let episodeData = {};
+        let totalEpisodes = 0;
+        let currentAnimeName = '';
+
+        // ============================================
+        // CONSTRUCCIÓN DE FILAS (una vez, por episodio)
+        // Se crean todas al recibir "init" y luego se
+        // ACTUALIZAN individualmente al llegar cada resultado,
+        // en vez de reconstruir toda la lista cada vez.
+        // ============================================
+        function buildPlaceholderRows() {
+            [megaList, mediafireList, mixedList].forEach(list => (list.innerHTML = ''));
+
+            for (let ep = 1; ep <= totalEpisodes; ep++) {
+                megaList.appendChild(makeRow(ep, checkingStatus()));
+                mediafireList.appendChild(makeRow(ep, checkingStatus()));
+                mixedList.appendChild(makeRow(ep, checkingStatus()));
+            }
+        }
+
+        function makeRow(ep, statusHtml) {
+            const row = document.createElement('div');
+            row.className = 'ep-item';
+            row.id = 'ep-' + ep;
+            row.dataset.ep = ep;
+            row.innerHTML = `<span class="ep-num">#${ep}</span><span class="ep-status">${statusHtml}</span>`;
+            return row;
+        }
+
+        function checkingStatus() {
+            return `<span class="badge-status checking"><span class="spinner-small"></span> verificando</span>`;
+        }
+
+        function unavailableStatus(label) {
+            return `<span class="badge-status unavailable">${label}</span>`;
+        }
+
+        function availableStatus(link, size, extra) {
+            const short = link.length > 42 ? link.slice(0, 42) + '…' : link;
+            return `
+            <a href="${link}" target="_blank" rel="noopener" class="link">${short}</a>
+            <span class="size">(${extra ? extra + ' · ' : ''}${size || '?'})</span>
+        `;
+        }
+
+        function updateRow(container, ep, statusHtml) {
+            const row = container.querySelector(`#ep-${ep}`) || makeRow(ep, statusHtml);
+            row.querySelector('.ep-status').innerHTML = statusHtml;
+            if (!container.contains(row)) container.appendChild(row);
+            row.classList.remove('flash');
+            // forzar reflow para poder re-disparar la animación
+            void row.offsetWidth;
+            row.classList.add('flash');
+        }
+
+        // ============================================
+        // ESTADÍSTICAS Y PROGRESO
+        // ============================================
+        function updateStats() {
+            try {
+                updateStatsInner();
+            } catch (e) {
+                console.error('updateStats falló (no debería frenar el polling):', e);
+            }
+        }
+
+        function updateStatsInner() {
+            const values = Object.values(episodeData);
+            const revisados = values.length;
+
+            const megaOk = values.filter(e => e.mega && e.mega !== 'checking').length;
+            const megaChecking = values.filter(e => e.mega === 'checking').length;
+
+            const mfOk = values.filter(e => e.mediafire && e.mediafire !== 'checking').length;
+            const mfChecking = values.filter(e => e.mediafire === 'checking').length;
+
+            const mixedOk = values.filter(e => e.mejor).length;
+
+            megaCount.textContent = `${megaOk} disponibles`;
+            mediafireCount.textContent = `${mfOk} disponibles`;
+            mixedCount.textContent = `${mixedOk} disponibles`;
+
+            megaBadge.textContent = megaChecking > 0 ? `${megaChecking} pendientes` : 'listo';
+            mediafireBadge.textContent = mfChecking > 0 ? `${mfChecking} pendientes` : 'listo';
+            mixedBadge.textContent = `${revisados}/${totalEpisodes} revisados`;
+
+            const pct = totalEpisodes > 0 ? Math.round((revisados / totalEpisodes) * 100) : 0;
+            progressFill.style.width = pct + '%';
+            progressLabel.textContent = `${revisados} / ${totalEpisodes} episodios revisados (${pct}%)`;
+
+            copyMegaBtn.disabled = megaOk === 0;
+            copyMediafireBtn.disabled = mfOk === 0;
+            copyMixedBtn.disabled = mixedOk === 0;
+            jdBtn.disabled = mixedOk === 0;
+        }
+
+        // ============================================
+        // PROCESAR UN RESULTADO DE EPISODIO
+        // (los episodios pueden llegar desordenados porque
+        // el backend los verifica en paralelo — cada fila
+        // se ubica por su número, así que no importa el orden)
+        // ============================================
+        function processMessage(data) {
+            if (data.type !== 'result') return;
+
+            const ep = data.episodio;
+            episodeData[ep] = { mega: data.mega || null, mediafire: data.mediafire || null, mejor: null };
+
+            if (data.mediafire) {
+                episodeData[ep].mejor = { link: data.mediafire.link, servidor: 'Mediafire', size: data.mediafire.size };
+            } else if (data.mega) {
+                episodeData[ep].mejor = { link: data.mega.link, servidor: 'Mega', size: data.mega.size };
+            }
+
+            updateRow(megaList, ep, data.mega ? availableStatus(data.mega.link, data.mega.size) : unavailableStatus('no disponible'));
+            updateRow(mediafireList, ep, data.mediafire ? availableStatus(data.mediafire.link, data.mediafire.size) : unavailableStatus('no disponible'));
+
+            const mejor = episodeData[ep].mejor;
+            updateRow(mixedList, ep, mejor
+                ? availableStatus(mejor.link, mejor.size, mejor.servidor)
+                : unavailableStatus('sin enlace'));
+
+            updateStats();
+        }
+
+        let pollTimer = null;
+        let pollAbortController = null;
+        let pollGeneration = 0; // para invalidar polls viejos si se reinicia todo
+
+        // Corta una fetch si tarda demasiado (evita que un solo request
+        // colgado se quede esperando para siempre).
+        function fetchConTimeout(url, options = {}, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+        }
+
+        function detenerPolling() {
+            pollGeneration++; // invalida cualquier poll en vuelo
+            clearTimeout(pollTimer);
+            pollTimer = null;
+        }
+
+        function mostrarErrorFatal(mensaje) {
+            detenerPolling();
+            initialLoader.classList.remove('active');
+            errorMsg.textContent = mensaje;
+            error.classList.add('active');
+            checkBtn.disabled = false;
+        }
+
+        // ============================================
+        // INICIAR VERIFICACIÓN (polling por lotes)
+        //
+        // 1) POST /check-stream/start -> arranca el trabajo en el
+        //    servidor (que sigue corriendo en background) y devuelve
+        //    un jobId al toque.
+        // 2) GET /check-stream/:jobId/progress?since=N cada 1.5s ->
+        //    trae solo los episodios verificados desde la última vez.
+        //
+        // Cada request es corta y se cierra sola, así que no depende
+        // de mantener una conexión larga abierta de punta a punta
+        // (eso es lo que fallaba con el SSE si algo en el medio
+        // bufferizaba la respuesta hasta el final).
+        // ============================================
+        function startVerification(url) {
+            episodeData = {};
+            totalEpisodes = 0;
+            initialLoader.classList.add('active');
+            resultsPanel.classList.remove('active');
+            error.classList.remove('active');
+            checkBtn.disabled = true;
+            detenerPolling();
+
+            const myGeneration = ++pollGeneration;
+
+            fetchConTimeout('/api/check-stream/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            }, 20000)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().catch(() => ({})).then(body => {
+                            throw new Error(body.error || `HTTP ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (myGeneration !== pollGeneration) return; // se canceló mientras tanto
+
+                    totalEpisodes = data.total;
+                    currentAnimeName = data.anime;
+                    episodeData = {};
+                    for (let i = 1; i <= totalEpisodes; i++) {
+                        episodeData[i] = { mega: 'checking', mediafire: 'checking', mejor: null };
+                    }
+                    initialLoader.classList.remove('active');
+                    resultsPanel.classList.add('active');
+                    buildPlaceholderRows();
+                    updateStats();
+
+                    pollProgress(data.jobId, 0, myGeneration, 0);
+                })
+                .catch(err => {
+                    if (myGeneration !== pollGeneration) return;
+                    console.error('Error iniciando verificación:', err);
+                    mostrarErrorFatal(err.message || 'Error al conectar con el servidor');
+                });
+        }
+
+        const POLL_INTERVAL_MS = 1500;
+        const MAX_FALLOS_SEGUIDOS = 6; // ~9s de fallos seguidos antes de rendirse
+
+        function pollProgress(jobId, since, myGeneration, fallosSeguidos) {
+            if (myGeneration !== pollGeneration) return;
+
+            fetchConTimeout(`/api/check-stream/${jobId}/progress?since=${since}`, {}, 15000)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().catch(() => ({})).then(body => {
+                            throw new Error(body.error || `HTTP ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (myGeneration !== pollGeneration) return;
+
+                    for (const resultado of data.results) {
+                        processMessage({ type: 'result', ...resultado });
+                    }
+
+                    if (data.error) {
+                        mostrarErrorFatal(data.error);
+                        return;
+                    }
+
+                    if (data.done) {
+                        detenerPolling();
+                        checkBtn.disabled = false;
+                        showNotification('Verificación completada', 'success');
+                        return;
+                    }
+
+                    pollTimer = setTimeout(
+                        () => pollProgress(jobId, data.nextIndex, myGeneration, 0),
+                        POLL_INTERVAL_MS
+                    );
+                })
+                .catch(err => {
+                    if (myGeneration !== pollGeneration) return;
+                    console.error('Error de polling:', err);
+
+                    const fallos = fallosSeguidos + 1;
+                    if (fallos >= MAX_FALLOS_SEGUIDOS) {
+                        mostrarErrorFatal('El servidor no respondió a tiempo. Revisa que esté corriendo y mira su consola.');
+                        return;
+                    }
+                    // Fallo transitorio: reintentamos sin tirar todo abajo
+                    pollTimer = setTimeout(
+                        () => pollProgress(jobId, since, myGeneration, fallos),
+                        POLL_INTERVAL_MS
+                    );
+                });
+        }
+
+        // ============================================
+        // COPIAR / EXPORTAR
+        // ============================================
+        function getEnlacesPorTipo(tipo) {
+            const enlaces = [];
+            for (const ep of Object.keys(episodeData).sort((a, b) => parseInt(a) - parseInt(b))) {
+                const item = episodeData[ep];
+                if (tipo === 'mega' && item.mega && item.mega !== 'checking') enlaces.push(item.mega.link);
+                else if (tipo === 'mediafire' && item.mediafire && item.mediafire !== 'checking') enlaces.push(item.mediafire.link);
+                else if (tipo === 'mixed' && item.mejor) enlaces.push(item.mejor.link);
+            }
+            return enlaces;
+        }
+
+        function copyEnlaces(tipo, label) {
+            const enlaces = getEnlacesPorTipo(tipo);
+            if (enlaces.length === 0) { showNotification(`No hay enlaces de ${label} disponibles`, 'error'); return; }
+            const texto = enlaces.join('\n');
+            navigator.clipboard.writeText(texto).then(() => {
+                showNotification(`${enlaces.length} enlaces de ${label} copiados`, 'success');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showNotification(`${enlaces.length} enlaces de ${label} copiados`, 'success');
+            });
+        }
+
+        function exportTxt() {
+            const enlaces = getEnlacesPorTipo('mixed');
+            if (enlaces.length === 0) { showNotification('No hay enlaces disponibles', 'error'); return; }
+            const blob = new Blob([enlaces.join('\n')], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${currentAnimeName.replace(/[^a-zA-Z0-9_-]/g, '_')}_enlaces.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showNotification(`${enlaces.length} enlaces exportados`, 'success');
+        }
+
+        // ============================================
+        // NOTIFICACIONES
+        // ============================================
+        function showNotification(message, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `notification ${type}`;
+            div.textContent = message;
+            document.body.appendChild(div);
+            setTimeout(() => {
+                div.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => div.remove(), 300);
+            }, 4000);
+        }
+
+        // ============================================
+        // EVENTOS
+        // ============================================
+        checkBtn.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            if (!url || !url.includes('jkanime.net')) {
+                errorMsg.textContent = 'Ingresa una URL válida de JkAnime';
+                error.classList.add('active');
+                return;
+            }
+            error.classList.remove('active');
+            startVerification(url);
+        });
+
+        urlInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkBtn.click(); });
+
+        copyMegaBtn.addEventListener('click', () => copyEnlaces('mega', 'Mega'));
+        copyMediafireBtn.addEventListener('click', () => copyEnlaces('mediafire', 'Mediafire'));
+        copyMixedBtn.addEventListener('click', () => copyEnlaces('mixed', 'recomendados'));
+        jdBtn.addEventListener('click', exportTxt);
+
+        document.addEventListener('DOMContentLoaded', () => setTimeout(() => checkBtn.click(), 500));
+    </script>
+</body>
+
+</html>

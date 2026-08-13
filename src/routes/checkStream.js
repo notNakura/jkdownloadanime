@@ -29,6 +29,57 @@ function logStep(msg) {
     console.log(`[STREAM ${ts}] ${msg}`);
 }
 
+// ============================================
+// PARSEO DE URL: episodio único o rango
+//
+// Acepta:
+//   https://jkanime.net/baccano/        -> serie completa
+//   https://jkanime.net/baccano/1       -> solo episodio 1
+//   https://jkanime.net/baccano/1-8     -> episodios 1 a 8
+//
+// Devuelve { baseUrl, start, end } donde start/end son null
+// si no se especificó episodio (revisión completa).
+// ============================================
+function parseJkanimeInput(rawUrl) {
+    let parsed;
+    try {
+        parsed = new URL(String(rawUrl).trim());
+    } catch (_) {
+        return null;
+    }
+
+    const host = parsed.hostname.replace(/^www\./i, '');
+    if (!/(^|\.)jkanime\.net$/i.test(host)) return null;
+
+    const segments = parsed.pathname.split('/').filter(Boolean);
+    if (segments.length === 0) return null;
+
+    let slugSegments = segments;
+    let start = null;
+    let end = null;
+
+    const last = segments[segments.length - 1];
+    const rangeMatch = last.match(/^(\d+)(?:-(\d+))?$/);
+
+    // Solo lo tratamos como episodio/rango si hay algo más antes en el path
+    // (el slug del anime), para no confundir "jkanime.net/123" con un anime.
+    if (rangeMatch && segments.length > 1) {
+        slugSegments = segments.slice(0, -1);
+        start = parseInt(rangeMatch[1], 10);
+        end = rangeMatch[2] ? parseInt(rangeMatch[2], 10) : start;
+        if (end < start) {
+            const tmp = start;
+            start = end;
+            end = tmp;
+        }
+    }
+
+    if (slugSegments.length === 0) return null;
+
+    const baseUrl = `${parsed.protocol}//${host}/${slugSegments.join('/')}/`;
+    return { baseUrl, start, end };
+}
+
 async function checkServer(server, verifyFn, label, ep) {
     if (!server) {
         logStep(`Ep ${ep} - sin servidor ${label} en la página`);
@@ -117,8 +168,20 @@ router.post('/check-stream/start', async (req, res) => {
         return res.status(400).json({ error: 'URL inválida' });
     }
 
-    logStep(`🚀 Nueva verificación solicitada: ${url}`);
-    const baseUrl = url.endsWith('/') ? url : url + '/';
+    const parsedInput = parseJkanimeInput(url);
+    if (!parsedInput) {
+        return res.status(400).json({
+            error: 'No se pudo interpretar la URL. Usá algo como https://jkanime.net/nombre-anime/, ' +
+                '.../nombre-anime/5 (un episodio) o .../nombre-anime/1-8 (un rango).'
+        });
+    }
+
+    const { baseUrl, start: requestedStart, end: requestedEnd } = parsedInput;
+
+    logStep(
+        `🚀 Nueva verificación solicitada: ${url} (base=${baseUrl}` +
+        `${requestedStart !== null ? `, rango pedido=${requestedStart}-${requestedEnd}` : ''})`
+    );
 
     try {
         logStep(`📥 pidiendo página principal: ${baseUrl}`);
@@ -134,13 +197,43 @@ router.post('/check-stream/start', async (req, res) => {
             throw new Error('No se pudo obtener la información del anime (¿cambió el HTML de JkAnime?)');
         }
 
-        const totalEpisodes = Math.min(info.totalEpisodes || 0, config.MAX_EPISODES);
+        const totalRealEpisodes = Math.min(info.totalEpisodes || 0, config.MAX_EPISODES);
         if (info.totalEpisodes > config.MAX_EPISODES) {
             logStep(`⚠️ totalEpisodes=${info.totalEpisodes} excede MAX_EPISODES, se recorta a ${config.MAX_EPISODES}`);
         }
 
+        if (totalRealEpisodes <= 0) {
+            throw new Error(`No se pudo determinar la cantidad de episodios de "${info.title}".`);
+        }
+
+        // Por defecto se revisa la serie completa. Si el usuario pidió un
+        // episodio puntual o un rango, se acota a eso — y si ese rango se
+        // pasa de la cantidad real de episodios, simplemente se recorta al
+        // último episodio real en vez de fallar (el resto sigue andando
+        // normal).
+        let rangeStart = 1;
+        let rangeEnd = totalRealEpisodes;
+        let rangeClamped = false;
+
+        if (requestedStart !== null) {
+            if (requestedStart > totalRealEpisodes) {
+                throw new Error(
+                    `El episodio ${requestedStart} no existe: "${info.title}" tiene ${totalRealEpisodes} episodios en total.`
+                );
+            }
+            rangeStart = requestedStart;
+            rangeEnd = requestedEnd;
+            if (rangeEnd > totalRealEpisodes) {
+                rangeEnd = totalRealEpisodes;
+                rangeClamped = true;
+            }
+        }
+
+        const totalToCheck = rangeEnd - rangeStart + 1;
+
         logStep(
-            `📊 "${info.title}" - ${totalEpisodes} episodios` +
+            `📊 "${info.title}" - episodios reales=${totalRealEpisodes}, verificando ${rangeStart}-${rangeEnd}` +
+            ` (${totalToCheck})${rangeClamped ? ' [rango recortado al total real]' : ''}` +
             ` (animeId=${info.animeId || 'N/A'})` +
             ` - concurrencia=${config.EPISODE_CONCURRENCY}`
         );
@@ -148,7 +241,10 @@ router.post('/check-stream/start', async (req, res) => {
         const jobId = crypto.randomUUID();
         const job = {
             anime: info.title,
-            total: totalEpisodes,
+            total: totalToCheck,
+            rangeStart,
+            rangeEnd,
+            totalRealEpisodes,
             results: [],
             done: false,
             error: null,
@@ -160,11 +256,19 @@ router.post('/check-stream/start', async (req, res) => {
         // Respondemos ya mismo con el jobId; el trabajo pesado
         // sigue corriendo en background y el front lo va a ir
         // consultando con polling.
-        res.json({ jobId, anime: info.title, total: totalEpisodes });
+        res.json({
+            jobId,
+            anime: info.title,
+            total: totalToCheck,
+            rangeStart,
+            rangeEnd,
+            totalRealEpisodes,
+            rangeClamped
+        });
 
         const limit = pLimit(config.EPISODE_CONCURRENCY);
         const tasks = [];
-        for (let ep = 1; ep <= totalEpisodes; ep++) {
+        for (let ep = rangeStart; ep <= rangeEnd; ep++) {
             const episodeUrl = `${baseUrl}${ep}/`;
             tasks.push(
                 limit(async () => {
@@ -181,7 +285,7 @@ router.post('/check-stream/start', async (req, res) => {
                     logStep(`⚠️ ${fallidas.length} tareas terminaron con error inesperado: ${fallidas.map(f => f.reason?.message).join(' | ')}`);
                 }
                 job.done = true;
-                logStep(`🏁 verificación completa en ${Date.now() - job.startedAt}ms (${totalEpisodes} episodios) - job ${jobId}`);
+                logStep(`🏁 verificación completa en ${Date.now() - job.startedAt}ms (${totalToCheck} episodios) - job ${jobId}`);
             })
             .catch(error => {
                 job.error = error.message;

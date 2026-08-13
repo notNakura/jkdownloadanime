@@ -14,6 +14,13 @@ const apiLimiter = rateLimit({
     max: 20,
     standardHeaders: true,
     legacyHeaders: false,
+    // El polling de progreso ya tiene su propio limiter (progressLimiter) más
+    // permisivo montado antes que este. Como express corre TODOS los
+    // middlewares cuyo path matchea (no solo el más específico), sin este
+    // "skip" las requests de polling también quedaban contadas acá contra el
+    // límite de 20/min, así que el front terminaba viendo "Demasiadas
+    // solicitudes" aunque el backend siguiera procesando todo con normalidad.
+    skip: req => /^\/check-stream\/[^/]+\/progress/.test(req.path),
     message: { error: 'Demasiadas solicitudes, esperá un momento.' }
 });
 

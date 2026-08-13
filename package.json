@@ -1,7 +1,7 @@
 {
-  "name": "jkdownloadanime",
+  "name": "jkanime-checker",
   "version": "2.0.0",
-  "description": "Buscador de enlaces de descarga (Mega/Mediafire) para JkAnime",
+  "description": "Verificador de enlaces de descarga (Mega/Mediafire) para JkAnime",
   "main": "server.js",
   "type": "commonjs",
   "engines": {

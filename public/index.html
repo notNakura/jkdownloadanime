@@ -842,29 +842,6 @@
             border-color: var(--green-deep);
         }
 
-        .copy-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            line-height: 1;
-            margin-right: 5px;
-        }
-
-        .copy-icon svg {
-            width: 16px;
-            height: 16px;
-            display: block;
-        }
-
-        .copy-success .copy-icon svg {
-            fill: currentColor;
-        }
-
-        .copy-success .copy-icon {
-            font-size: 15px;
-        }
-
         /* ---------- FAQ ---------- */
 
         .faq-widget {
@@ -2289,10 +2266,9 @@
                 return;
             }
 
-            const icon = button.querySelector('.copy-icon');
             const text = button.querySelector('.copy-text');
 
-            if (!icon || !text) {
+            if (!text) {
                 return;
             }
 
@@ -2302,21 +2278,18 @@
 
             button.classList.add('copy-success');
 
-            // Reemplazar el contenido con el SVG de check
-            icon.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 16px; height: 16px; fill: currentColor;">
-                    <!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                    <path d="M448 96L439.4 96C428.4 76.9 407.7 64 384 64L256 64C232.3 64 211.6 76.9 200.6 96L192 96C156.7 96 128 124.7 128 160L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 160C512 124.7 483.3 96 448 96zM264 176C250.7 176 240 165.3 240 152C240 138.7 250.7 128 264 128L376 128C389.3 128 400 138.7 400 152C400 165.3 389.3 176 376 176L264 176z"/>
-                </svg>
-            `;
-            
+            // Guardar el texto original
+            const originalText = text.textContent;
+            button._originalText = originalText;
+
+            // Cambiar el texto a "¡Copiado!"
             text.textContent = '¡Copiado!';
 
             button._copyTimer = setTimeout(() => {
                 button.classList.remove('copy-success');
                 
-                // Restaurar el icono original
-                text.textContent = 'Copiar';
+                // Restaurar el texto original
+                text.textContent = button._originalText || 'Copiar';
                 
                 button._copyTimer = null;
             }, 1500);

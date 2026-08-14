@@ -33,9 +33,9 @@ function logStep(msg) {
 // PARSEO DE URL: episodio único o rango
 //
 // Acepta:
-//   https://jkanime.net/baccano/        -> serie completa
-//   https://jkanime.net/baccano/1       -> solo episodio 1
-//   https://jkanime.net/baccano/1-8     -> episodios 1 a 8
+//   https://jkanime.net/durarara/        -> serie completa
+//   https://jkanime.net/durarara/1       -> solo episodio 1
+//   https://jkanime.net/durarara/1-8     -> episodios 1 a 8
 //
 // Devuelve { baseUrl, start, end } donde start/end son null
 // si no se especificó episodio (revisión completa).

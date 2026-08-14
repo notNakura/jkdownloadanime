@@ -32,6 +32,7 @@
     --black-strong: rgba(0, 0, 0, 0.35);
     --ticket-color: rgba(0, 0, 0);
     --marquee-bg: #decc3e;
+    --marquee-bg-lite: #eedd56;
 }
 
 * {
@@ -64,7 +65,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    padding: 0 14px 60px;
+    padding: 20px 14px;
     position: relative;
 }
 
@@ -89,14 +90,30 @@ body::before {
     width: 100%;
 }
 
+/* ===== Marquee / meta-strip ===== */
+
 .meta-strip {
     position: relative;
-    background: var(--marquee-bg);
+    background:
+        repeating-linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.1) 0px,
+            rgba(0, 0, 0, 0.1) 8px,
+            transparent 8px,
+            transparent 24px
+        ),
+        var(--marquee-bg);
     color: var(--ticket-color);
+    border: 2px #000 solid;
     font-size: 12.5px;
     overflow: hidden;
     white-space: nowrap;
     padding: 6px 0;
+}
+
+.meta-strip-bottom {
+    padding: 14px;
+    min-height: 20px;
 }
 
 .ticker {
@@ -118,6 +135,10 @@ body::before {
     flex-shrink: 0;
     position: relative;
     isolation: isolate;
+    text-shadow:
+        0 0 3px var(--marquee-bg),
+        0 0 3px var(--marquee-bg),
+        0 0 6px var(--marquee-bg);
 }
 
 .ticker-group::before {
@@ -169,18 +190,20 @@ body::before {
     from {
         transform: translateX(0);
     }
+
     to {
         transform: translateX(-50%);
     }
 }
 
+/* ===== Content container ===== */
+
 .content {
     background: var(--container-bg);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 8px 8px;
+    border-inline: 2px solid #000000;
+    border-radius: 0;
     box-shadow: 0 3px 10px var(--shadow-medium);
-    padding: 22px 26px 28px;
+    padding: 22px 26px 22px;
 }
 
 .search-widget {
@@ -239,73 +262,88 @@ input:focus-visible {
     border-color: var(--accent);
 }
 
+/* ===== Buttons ===== */
+
 button {
     font-family: inherit;
     font-weight: 700;
     font-size: 14px;
     padding: 10px 20px;
-    color: #000000;
-    border-radius: 5px;
+    color: var(--text);
+    border-radius: 3px;
     cursor: pointer;
     white-space: nowrap;
-    background: linear-gradient(to bottom, #f5e56b, #decc3e);
-    border: 1px solid #c4b235;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 2px var(--shadow);
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-    transition: all 0.12s ease;
+    background: var(--container-bg);
+    border: 1px solid var(--border);
+    box-shadow: none;
+    text-shadow: none;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
 button:hover:not(:disabled) {
-    filter: brightness(1.05);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 4px var(--shadow-medium);
-    transform: translateY(-1px);
+    background: var(--danger-bg);
+    color: var(--text);
+    border-color: var(--accent);
+    box-shadow: none;
 }
 
 button:active:not(:disabled) {
-    filter: brightness(0.95);
-    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), 0 1px 2px var(--shadow);
-    transform: translateY(0);
+    background: var(--border);
+    color: var(--text);
+    border-color: var(--accent);
+    box-shadow: none;
 }
 
 button:disabled {
     opacity: 0.45;
     cursor: not-allowed;
-    transform: none;
 }
 
 button:focus-visible {
-    outline: 2px solid #decc3e;
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
 }
 
+/* ===== Main check button ===== */
+
 #checkBtn {
-    background: linear-gradient(to bottom, #f5e56b, #decc3e);
-    border: 1px solid #c4b235;
-    color: #000000;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: var(--marquee-bg);
+    border: 1px solid #000000;
+    color: var(--text);
+    text-shadow: none;
     font-weight: 700;
     letter-spacing: 0.5px;
     padding: 10px 24px;
+    box-shadow: none;
 }
 
 #checkBtn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #f8ea7e, #e5d545);
-    border-color: #b5a32e;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 3px 6px rgba(0, 0, 0, 0.2);
+    background: var(--marquee-bg-lite);
+    color: var(--text);
+    border-color: #000000;
+    box-shadow: none;
 }
 
 #checkBtn:active:not(:disabled) {
-    background: linear-gradient(to bottom, #d4c23a, #c9b836);
-    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), 0 1px 2px var(--shadow);
+    background: var(--marquee-bg);
+    color: var(--text);
+    border-color: #000000;
+    box-shadow: none;
 }
 
 #checkBtn:disabled {
-    background: linear-gradient(to bottom, #e0e0e0, #cccccc);
-    border-color: #aaaaaa;
-    color: #666666;
+    background: var(--danger-bg);
+    border-color: var(--border);
+    color: var(--text-dim);
     text-shadow: none;
     opacity: 0.6;
 }
+
+/* ===== Error ===== */
 
 .error {
     padding: 5px 0;
@@ -323,6 +361,8 @@ button:focus-visible {
     color: var(--danger);
 }
 
+/* ===== State panels ===== */
+
 .state-panel {
     display: none;
     text-align: center;
@@ -339,7 +379,7 @@ button:focus-visible {
     width: 570px;
     height: 320px;
     object-fit: contain;
-    margin: 0 auto 18px;
+    margin: 0 auto 0;
     border-radius: 6px;
 }
 
@@ -404,10 +444,13 @@ button:focus-visible {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
 }
+
+/* ===== Filter ===== */
 
 .section-filter {
     padding: 0 16px;
@@ -437,7 +480,6 @@ button:focus-visible {
     position: absolute;
     right: 4px;
     top: 50%;
-    transform: translateY(-50%);
     width: 22px;
     height: 22px;
     padding: 0;
@@ -453,17 +495,28 @@ button:focus-visible {
     line-height: 1;
     border-radius: 50%;
     cursor: pointer;
+
+    /* Solo mantiene su posición. No hay efecto de desplazamiento al pulsar. */
+    transform: translateY(-50%);
 }
 
 .filter-clear-btn:hover {
     color: var(--danger);
-    filter: none;
     background: var(--black-soft);
+    transform: translateY(-50%);
+}
+
+.filter-clear-btn:active {
+    color: var(--danger);
+    background: var(--border);
+    transform: translateY(-50%);
 }
 
 .filter-clear-btn[hidden] {
     display: none;
 }
+
+/* ===== Section status ===== */
 
 .section-status {
     font-size: 11px;
@@ -473,6 +526,8 @@ button:focus-visible {
     background: var(--white-soft);
     color: var(--container-bg);
 }
+
+/* ===== Sections ===== */
 
 .section-row {
     display: flex;
@@ -563,6 +618,8 @@ button:focus-visible {
     padding: 14px 16px;
 }
 
+/* ===== Episode list ===== */
+
 .col .ep-list,
 .section-body .ep-list {
     max-height: 280px;
@@ -610,6 +667,7 @@ button:focus-visible {
     0% {
         background: var(--border);
     }
+
     100% {
         background: transparent;
     }
@@ -686,6 +744,8 @@ button:focus-visible {
     }
 }
 
+/* ===== Section footer / copy buttons ===== */
+
 .section-footer {
     padding: 10px 16px 14px;
     display: flex;
@@ -695,10 +755,10 @@ button:focus-visible {
 }
 
 .section-footer button {
-    background: var(--danger-bg);
+    background: var(--container-bg);
     color: var(--text);
     border: 1px solid var(--border);
-    box-shadow: inset 0 1px 0 var(--white-strong);
+    box-shadow: none;
     text-shadow: none;
     font-size: 13px;
     padding: 8px 14px;
@@ -707,20 +767,37 @@ button:focus-visible {
     justify-content: center;
     gap: 2px;
     min-width: 100px;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
 .section-footer button:hover:not(:disabled) {
-    filter: none;
+    background: var(--danger-bg);
     border-color: var(--accent);
-    color: var(--accent-deep);
+    color: var(--text);
+    box-shadow: none;
 }
 
-.section-footer button.copy-success {
-    background: var(--green-deep);
-    color: var(--container-bg);
-    border-color: var(--green-deep);
+.section-footer button:active:not(:disabled) {
+    background: var(--border);
+    border-color: var(--accent);
+    color: var(--text);
+    box-shadow: none;
 }
+
+/* Estado de copia: neutro, sin morado */
+
+.section-footer button.copy-success {
+    background: var(--danger-bg);
+    color: var(--text);
+    border-color: var(--accent);
+    box-shadow: none;
+}
+
+/* ===== FAQ ===== */
 
 .faq-widget {
     background: var(--container-bg);
@@ -801,6 +878,8 @@ button:focus-visible {
     font-size: 13px;
 }
 
+/* ===== Footer ===== */
+
 .blog-footer {
     text-align: center;
     margin-top: 16px;
@@ -811,9 +890,11 @@ button:focus-visible {
     line-height: 1.6;
 }
 
+/* ===== Responsive ===== */
+
 @media (max-width: 700px) {
     .content {
-        padding: 18px 16px 22px;
+        padding: 22px 16px 22px;
     }
 
     .input-group {
